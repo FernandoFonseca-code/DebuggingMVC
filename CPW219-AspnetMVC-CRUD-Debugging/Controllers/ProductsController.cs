@@ -22,13 +22,19 @@ namespace CPW219_AspnetMVC_CRUD_Debugging.Controllers
         {
             return View();
         }
-
+        /// <summary>
+        /// This action method is used to create a new product.
+        /// Need the save changes async to save the changes to the database.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
                 await _context.AddAsync(product);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -51,7 +57,6 @@ namespace CPW219_AspnetMVC_CRUD_Debugging.Controllers
             {
                 _context.Update(product);
                 await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -75,6 +80,7 @@ namespace CPW219_AspnetMVC_CRUD_Debugging.Controllers
         {
             var product = await _context.Product.FindAsync(id);
             _context.Product.Remove(product);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
